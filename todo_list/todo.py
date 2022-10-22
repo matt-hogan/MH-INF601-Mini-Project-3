@@ -26,30 +26,27 @@ def index():
         return render_template('home.html')
 
 
-@bp.route('/create', methods=('GET', 'POST'))
+@bp.route('/create', methods=('POST',))
 @login_required
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        error = None
+    title = request.form['title']
+    description = request.form['description']
+    error = None
 
-        if not title:
-            error = 'Title is required.'
+    if not title:
+        error = 'Title is required.'
 
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO todo (title, description, author_id, dismissed)'
-                ' VALUES (?, ?, ?, 0)',
-                (title, description, g.user['id'])
-            )
-            db.commit()
-            return redirect(url_for('todo.index'))
-
-    return render_template('todo/create.html')
+    if error is not None:
+        flash(error)
+    else:
+        db = get_db()
+        db.execute(
+            'INSERT INTO todo (title, description, author_id, dismissed)'
+            ' VALUES (?, ?, ?, 0)',
+            (title, description, g.user['id'])
+        )
+        db.commit()
+        return redirect(url_for('todo.index'))
 
 
 def get_post(id, check_author=True):

@@ -1,10 +1,38 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Posts{% endblock %}</h1>
-  {% if g.user %}
-    <a class="action" href="{{ url_for('todo.create') }}">New</a>
-  {% endif %}
+  <h1>{% block title %}Tasks{% endblock %}</h1>
+  <a class="action" href="{{ url_for('todo.create') }}">New</a>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    New Task
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">New Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="post" action="{{ url_for('todo.create') }}">
+          <div class="modal-body">
+            <label for="title">Title</label>
+            <input name="title" id="title" value="{{ request.form['title'] }}" required>
+            <label for="description">Description</label>
+            <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-primary" value="Add">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +46,7 @@
       </header>
       <p class="description">{{ post['description'] }}</p>
       <form action="{{ url_for('todo.dismiss', id=post['id']) }}" method="post">
-        {% if post["dismissed"] %}
+        {% if not post["dismissed"] %}
           <input type="submit" value=" ">
         {% else %}
           <input type="submit" value="X">
