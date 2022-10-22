@@ -46,7 +46,7 @@ def create():
             (title, description, g.user['id'])
         )
         db.commit()
-        return redirect(url_for('todo.index'))
+    return redirect(url_for('todo.index'))
 
 
 def get_post(id, check_author=True):
