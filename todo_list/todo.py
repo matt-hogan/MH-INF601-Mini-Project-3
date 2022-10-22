@@ -17,9 +17,9 @@ def index():
         posts = db.execute(
             'SELECT t.id, title, description, author_id, dismissed'
             ' FROM todo t JOIN user u ON t.author_id = u.id'
-            # ' WHERE u.id = ?'
+            ' WHERE u.id = ?',
             # ' ORDER BY dismissed'
-            # (id)
+            (g.user['id'],)
         ).fetchall()
         return render_template('todo/index.html', posts=posts)
     else:
