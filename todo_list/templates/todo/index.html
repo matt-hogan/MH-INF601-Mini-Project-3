@@ -14,11 +14,16 @@
         <div>
           <h1>{{ post['title'] }}</h1>
         </div>
-        {% if g.user['id'] == post['author_id'] %}
           <a class="action" href="{{ url_for('todo.update', id=post['id']) }}">Edit</a>
-        {% endif %}
       </header>
       <p class="description">{{ post['description'] }}</p>
+      <form action="{{ url_for('todo.dismiss', id=post['id']) }}" method="post">
+        {% if post["dismissed"] %}
+          <input type="submit" value=" ">
+        {% else %}
+          <input type="submit" value="X">
+        {% endif %}
+      </form>
     </article>
     {% if not loop.last %}
       <hr>

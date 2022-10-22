@@ -43,7 +43,7 @@ def create():
             db = get_db()
             db.execute(
                 'INSERT INTO todo (title, description, author_id, dismissed)'
-                ' VALUES (?, ?, ?, FALSE)',
+                ' VALUES (?, ?, ?, 0)',
                 (title, description, g.user['id'])
             )
             db.commit()
@@ -95,6 +95,25 @@ def update(id):
             return redirect(url_for('todo.index'))
 
     return render_template('todo/update.html', post=post)
+
+
+@bp.route('/<int:id>/dismiss', methods=('POST',))
+@login_required
+def dismiss(id):
+    post = get_post(id)
+    if post["dismissed"]:
+        dismissed = 0
+    else:
+        dismissed = 1
+
+    db = get_db()
+    db.execute(
+        'UPDATE todo SET dismissed = ?'
+        ' WHERE id = ?',
+        (dismissed, id)
+    )
+    db.commit()
+    return redirect(url_for('todo.index'))
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
