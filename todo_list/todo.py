@@ -11,15 +11,19 @@ bp = Blueprint('todo', __name__)
 
 @bp.route('/')
 def index():
-    db = get_db()
-    posts = db.execute(
-        'SELECT t.id, title, description, author_id, dismissed'
-        ' FROM todo t JOIN user u ON t.author_id = u.id'
-        # ' WHERE u.id = ?'
-        # ' ORDER BY dismissed'
-        # (id)
-    ).fetchall()
-    return render_template('todo/index.html', posts=posts)
+    # Only displays a todo list if the user is logged in
+    if g.user:
+        db = get_db()
+        posts = db.execute(
+            'SELECT t.id, title, description, author_id, dismissed'
+            ' FROM todo t JOIN user u ON t.author_id = u.id'
+            # ' WHERE u.id = ?'
+            # ' ORDER BY dismissed'
+            # (id)
+        ).fetchall()
+        return render_template('todo/index.html', posts=posts)
+    else:
+        return render_template('home.html')
 
 
 @bp.route('/create', methods=('GET', 'POST'))
