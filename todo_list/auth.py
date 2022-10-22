@@ -39,6 +39,11 @@ def register():
                 error = f"{email} is already registered."
             else:
                 # Log in user
+                user = db.execute(
+                    'SELECT * FROM user WHERE email = ?', (email,)
+                ).fetchone()
+                session.clear()
+                session['user_id'] = user['id']
                 return redirect(url_for("index"))
 
         flash(error)
