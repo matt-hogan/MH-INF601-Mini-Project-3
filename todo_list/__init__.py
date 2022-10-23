@@ -1,5 +1,8 @@
-import os
+# INF601 - Advanced Programming in Python
+# Matt Hogan
+# Mini Project 3
 
+import os
 from flask import Flask
 
 

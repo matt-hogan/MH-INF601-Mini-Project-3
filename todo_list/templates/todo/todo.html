@@ -6,16 +6,16 @@
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
+  {% for task in tasks %}
     <article class="post">
-      <h4>{{ post['title'] }}</h4>
-      <p class="description">{{ post['description'] }}</p>
+      <h4>{{ task['title'] }}</h4>
+      <p class="description">{{ task['description'] }}</p>
 
       <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTaskModal{{ post['id'] }}">Edit</button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTaskModal{{ task['id'] }}">Edit</button>
     
       <!-- Modal -->
-      <div class="modal fade" id="updateTaskModal{{ post['id'] }}" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalTitle" aria-hidden="true">
+      <div class="modal fade" id="updateTaskModal{{ task['id'] }}" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -25,11 +25,11 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="post" action="{{ url_for('todo.update', id=post['id']) }}">
+              <form method="post" action="{{ url_for('todo.update', id=task['id']) }}">
                 <label for="title">Title</label>
-                <input name="title" id="title" value="{{ post['title'] }}" required>
+                <input name="title" id="title" value="{{ task['title'] }}" required>
                 <label for="description">Description</label>
-                <textarea name="description" id="description">{{ post['description'] }}</textarea>
+                <textarea name="description" id="description">{{ task['description'] }}</textarea>
                 <input type="submit" class="btn btn-primary" value="Update">
               </form>
             </div>
@@ -39,14 +39,14 @@
         </div>
       </div>
 
-      <form action="{{ url_for('todo.dismiss', id=post['id']) }}" method="post">
-        {% if not post["completed"] %}
+      <form action="{{ url_for('todo.dismiss', id=task['id']) }}" method="task">
+        {% if not task["completed"] %}
           <input type="submit" value=" ">
         {% else %}
           <input type="submit" value="X">
         {% endif %}
       </form>
-      <form action="{{ url_for('todo.delete', id=post['id']) }}" method="post">
+      <form action="{{ url_for('todo.delete', id=task['id']) }}" method="task">
         <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
       </form>
     </article>
