@@ -21,9 +21,9 @@ def index():
             # ' ORDER BY dismissed'
             (g.user['id'],)
         ).fetchall()
-        return render_template('todo/index.html', posts=posts)
+        return render_template('todo.html', posts=posts)
     else:
-        return render_template('home.html')
+        return render_template('index.html')
 
 
 @bp.route('/create', methods=('POST',))

@@ -17,18 +17,17 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="{{ url_for('todo.create') }}">
-          <div class="modal-body">
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('todo.create') }}">
             <label for="title">Title</label>
             <input name="title" id="title" value="{{ request.form['title'] }}" required>
             <label for="description">Description</label>
             <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <input type="submit" class="btn btn-primary" value="Add">
-          </div>
-        </form>
+          </form>
+        </div>
+        <div class="modal-footer">
+        </div>
       </div>
     </div>
   </div>
@@ -53,18 +52,17 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form method="post" action="{{ url_for('todo.update', id=post['id']) }}">
-              <div class="modal-body">
+            <div class="modal-body">
+              <form method="post" action="{{ url_for('todo.update', id=post['id']) }}">
                 <label for="title">Title</label>
                 <input name="title" id="title" value="{{ post['title'] }}" required>
                 <label for="description">Description</label>
                 <textarea name="description" id="description">{{ post['description'] }}</textarea>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <input type="submit" class="btn btn-primary" value="Update">
-              </div>
-            </form>
+              </form>
+            </div>
+            <div class="modal-footer">
+            </div>
           </div>
         </div>
       </div>
