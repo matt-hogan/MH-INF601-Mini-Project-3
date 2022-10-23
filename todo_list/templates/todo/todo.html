@@ -7,51 +7,80 @@
 
 {% block content %}
   {% for task in tasks %}
-    <article class="post">
-      <h4>{{ task['title'] }}</h4>
-      <p class="description">{{ task['description'] }}</p>
+    <article class="post row align-items-center">
+      <form action="{{ url_for('todo.dismiss', id=task['id']) }}" method="post" class="m-4 col text-right">
+        {% if not task["completed"] %}
+          <button class="btn btn-secondary"><i class=' fa fa-solid fa-check' style='color: white'></i></button>
+        {% else %}
+        <button class="btn btn-primary"><i class=' fa fa-solid fa-check' style='color: white'></i></button>
+        {% endif %}
+      </form>
+      
+      <div class="m-4 col">
+        <h4>{{ task['title'] }}</h4>
+        <p class="description">{{ task['description'] }}</p>
+      </div>
 
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTaskModal{{ task['id'] }}">Edit</button>
-    
-      <!-- Modal -->
-      <div class="modal fade" id="updateTaskModal{{ task['id'] }}" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="updateTaskModalTitle">Edit Task</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+      <div class="m-4 row col">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#updateTaskModal{{ task['id'] }}"><i class=' fa fa-solid fa-edit' style='color: white'></i></button>
+      
+        <!-- Modal -->
+        <div class="modal fade" id="updateTaskModal{{ task['id'] }}" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateTaskModalTitle">Edit Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post" action="{{ url_for('todo.update', id=task['id']) }}">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="title" class="col-4 col-form-label">Title</label>
+                    <input name="title" id="title" class="form-control" value="{{ task['title'] }}" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="description" class="col-4 col-form-label">Description</label>
+                    <textarea name="description" id="description" class="form-control" rows="5">{{ task['description'] }}</textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <input type="submit" class="btn btn-primary" value="Update">
+                </div>
+              </form>
             </div>
-            <form method="post" action="{{ url_for('todo.update', id=task['id']) }}"></form>
-              <div class="modal-body">
-                <label for="title">Title</label>
-                <input name="title" id="title" value="{{ task['title'] }}" required>
-                <label for="description">Description</label>
-                <textarea name="description" id="description">{{ task['description'] }}</textarea>
+          </div>
+        </div>
+
+        <div class="m-1">
+          <!-- Button trigger modal -->
+          <button class="btn btn-primary" data-toggle="modal" data-target="#deleteTaskModal{{ task['id'] }}"><i class='fa-solid fa-trash-can' style='color: white'></i></button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="deleteTaskModal{{ task['id'] }}" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModalTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title text-center" id="deleteTaskModalTitle">Are you sure you want to delete this task?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form method="post" action="{{ url_for('todo.delete', id=task['id']) }}">
+                  <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                  </div>
+                </form>
               </div>
-              <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Update">
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
-
-      <form action="{{ url_for('todo.dismiss', id=task['id']) }}" method="task">
-        {% if not task["completed"] %}
-          <input type="submit" value=" ">
-        {% else %}
-          <input type="submit" value="X">
-        {% endif %}
-      </form>
-      <form action="{{ url_for('todo.delete', id=task['id']) }}" method="task">
-        <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-      </form>
     </article>
     {% if not loop.last %}
-      <hr>
+      <hr class="w-75">
     {% endif %}
   {% endfor %}
 {% endblock %}

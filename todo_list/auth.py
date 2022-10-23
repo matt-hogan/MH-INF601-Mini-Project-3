@@ -64,10 +64,8 @@ def login():
             'SELECT * FROM user WHERE email = ?', (email,)
         ).fetchone()
 
-        if user is None:
-            error = 'Email is not registered.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+        if user is None or not check_password_hash(user['password'], password):
+            error = 'Incorrect email or password'
 
         if error is None:
             session.clear()

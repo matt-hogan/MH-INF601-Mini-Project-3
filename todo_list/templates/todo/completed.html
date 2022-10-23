@@ -1,5 +1,5 @@
 {% extends 'todo/todo.html' %}
 
 {% block tasks_buttons %}
-  <button type="button" class="btn btn-secondary"><a href="{{ url_for('todo.index') }}">View Incompleted Tasks</a></button>
+<a href="{{ url_for('todo.index') }}"><button type="button" class="btn btn-secondary m-1">View Incomplete Tasks</button></a>
 {% endblock %}
