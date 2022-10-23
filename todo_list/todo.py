@@ -66,32 +66,27 @@ def get_post(id, check_author=True):
     return post
 
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/update', methods=('POST',))
 @login_required
 def update(id):
-    post = get_post(id)
+    title = request.form['title']
+    description = request.form['description']
+    error = None
 
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        error = None
+    if not title:
+        error = 'Title is required.'
 
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'UPDATE todo SET title = ?, description = ?'
-                ' WHERE id = ?',
-                (title, description, id)
-            )
-            db.commit()
-            return redirect(url_for('todo.index'))
-
-    return render_template('todo/update.html', post=post)
+    if error is not None:
+        flash(error)
+    else:
+        db = get_db()
+        db.execute(
+            'UPDATE todo SET title = ?, description = ?'
+            ' WHERE id = ?',
+            (title, description, id)
+        )
+        db.commit()
+        return redirect(url_for('todo.index'))
 
 
 @bp.route('/<int:id>/dismiss', methods=('POST',))

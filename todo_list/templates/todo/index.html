@@ -37,13 +37,38 @@
 {% block content %}
   {% for post in posts %}
     <article class="post">
-      <header>
-        <div>
-          <h1>{{ post['title'] }}</h1>
-        </div>
-          <a class="action" href="{{ url_for('todo.update', id=post['id']) }}">Edit</a>
-      </header>
+      <h4>{{ post['title'] }}</h4>
       <p class="description">{{ post['description'] }}</p>
+
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTaskModal{{ post['id'] }}">Edit</button>
+    
+      <!-- Modal -->
+      <div class="modal fade" id="updateTaskModal{{ post['id'] }}" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateTaskModalTitle">Edit Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="post" action="{{ url_for('todo.update', id=post['id']) }}">
+              <div class="modal-body">
+                <label for="title">Title</label>
+                <input name="title" id="title" value="{{ post['title'] }}" required>
+                <label for="description">Description</label>
+                <textarea name="description" id="description">{{ post['description'] }}</textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Update">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <form action="{{ url_for('todo.dismiss', id=post['id']) }}" method="post">
         {% if not post["dismissed"] %}
           <input type="submit" value=" ">
