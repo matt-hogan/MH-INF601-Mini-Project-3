@@ -33,7 +33,8 @@ def completed():
     tasks = db.execute(
         'SELECT t.id, title, description, author_id, completed'
         ' FROM todo t JOIN user u ON t.author_id = u.id'
-        ' WHERE u.id = ? AND completed = 1',
+        ' WHERE u.id = ? AND completed = 1'
+        ' ORDER BY t.id DESC',
         (g.user['id'],)
     ).fetchall()
     return render_template('todo/completed.html', tasks=tasks)
@@ -102,7 +103,7 @@ def update(id):
             (title, description, id)
         )
         db.commit()
-    return redirect(url_for('todo.index'))
+    return redirect(request.referrer)
 
 
 @bp.route('/<int:id>/dismiss', methods=('POST',))
@@ -133,4 +134,4 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM todo WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('todo.index'))
+    return redirect(request.referrer)
