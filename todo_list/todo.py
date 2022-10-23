@@ -15,15 +15,27 @@ def index():
     if g.user:
         db = get_db()
         posts = db.execute(
-            'SELECT t.id, title, description, author_id, dismissed'
+            'SELECT t.id, title, description, author_id, completed'
             ' FROM todo t JOIN user u ON t.author_id = u.id'
-            ' WHERE u.id = ?',
-            # ' ORDER BY dismissed'
+            ' WHERE u.id = ? AND completed = 0',
             (g.user['id'],)
         ).fetchall()
-        return render_template('todo.html', posts=posts)
+        return render_template('todo/incomplete.html', posts=posts)
     else:
         return render_template('index.html')
+
+
+@bp.route('/completed', methods=('GET',))
+@login_required
+def completed():
+    db = get_db()
+    posts = db.execute(
+        'SELECT t.id, title, description, author_id, completed'
+        ' FROM todo t JOIN user u ON t.author_id = u.id'
+        ' WHERE u.id = ? AND completed = 1',
+        (g.user['id'],)
+    ).fetchall()
+    return render_template('todo/completed.html', posts=posts)
 
 
 @bp.route('/create', methods=('POST',))
@@ -41,7 +53,7 @@ def create():
     else:
         db = get_db()
         db.execute(
-            'INSERT INTO todo (title, description, author_id, dismissed)'
+            'INSERT INTO todo (title, description, author_id, completed)'
             ' VALUES (?, ?, ?, 0)',
             (title, description, g.user['id'])
         )
@@ -51,7 +63,7 @@ def create():
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT t.id, title, description, dismissed, author_id'
+        'SELECT t.id, title, description, completed, author_id'
         ' FROM todo t JOIN user u ON t.author_id = u.id'
         ' WHERE t.id = ?',
         (id,)
@@ -86,26 +98,26 @@ def update(id):
             (title, description, id)
         )
         db.commit()
-        return redirect(url_for('todo.index'))
+    return redirect(url_for('todo.index'))
 
 
 @bp.route('/<int:id>/dismiss', methods=('POST',))
 @login_required
 def dismiss(id):
     post = get_post(id)
-    if post["dismissed"]:
-        dismissed = 0
+    if post["completed"]:
+        completed = 0
     else:
-        dismissed = 1
+        completed = 1
 
     db = get_db()
     db.execute(
-        'UPDATE todo SET dismissed = ?'
+        'UPDATE todo SET completed = ?'
         ' WHERE id = ?',
-        (dismissed, id)
+        (completed, id)
     )
     db.commit()
-    return redirect(url_for('todo.index'))
+    return redirect(request.referrer)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))

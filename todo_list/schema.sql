@@ -14,6 +14,6 @@ CREATE TABLE todo (
   author_id INTEGER NOT NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
-  dismissed INTEGER NOT NULL CHECK (dismissed IN (0, 1)),
+  completed INTEGER NOT NULL CHECK (completed IN (0, 1)),
   FOREIGN KEY (author_id) REFERENCES user (id)
 );

@@ -2,35 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Tasks{% endblock %}</h1>
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    New Task
-  </button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">New Task</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{{ url_for('todo.create') }}">
-            <label for="title">Title</label>
-            <input name="title" id="title" value="{{ request.form['title'] }}" required>
-            <label for="description">Description</label>
-            <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
-            <input type="submit" class="btn btn-primary" value="Add">
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
+  {% block tasks_buttons %}{% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -68,7 +40,7 @@
       </div>
 
       <form action="{{ url_for('todo.dismiss', id=post['id']) }}" method="post">
-        {% if not post["dismissed"] %}
+        {% if not post["completed"] %}
           <input type="submit" value=" ">
         {% else %}
           <input type="submit" value="X">
